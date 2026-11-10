@@ -1,0 +1,3 @@
+$ docker exec tareas_web python -m pytest -q
+....                                                                     [100%]
+4 passed in 0.10s

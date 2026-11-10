@@ -1,0 +1,4 @@
+$ docker images --filter reference=gestor-tareas-ci* --format table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.Size}}
+REPOSITORY             TAG       IMAGE ID       SIZE
+gestor-tareas-ci-web   latest    bf69a99d91b2   216MB
+gestor-tareas-ci-db    latest    eca7e5b8d6c3   419MB

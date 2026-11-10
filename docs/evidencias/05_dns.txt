@@ -1,0 +1,2 @@
+$ docker exec tareas_web python -c import socket; print('db resuelve a', socket.gethostbyname('db'))
+db resuelve a 172.19.0.2

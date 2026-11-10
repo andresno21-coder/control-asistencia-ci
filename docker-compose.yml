@@ -1,0 +1,43 @@
+# Levanta los dos contenedores y la red que los comunica:
+#   docker compose up -d --build
+services:
+  db:
+    build: ./db
+    container_name: tareas_db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-tareas}
+      POSTGRES_USER: ${DB_USER:-tareas_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-cambiar_esta_clave}
+    volumes:
+      - datos_db:/var/lib/postgresql/data
+    networks:
+      - red_tareas
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-tareas_user} -d ${DB_NAME:-tareas}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  web:
+    build: ./web
+    container_name: tareas_web
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-tareas}
+      DB_USER: ${DB_USER:-tareas_user}
+      DB_PASSWORD: ${DB_PASSWORD:-cambiar_esta_clave}
+    ports:
+      - "${WEB_PORT:-8085}:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - red_tareas
+
+networks:
+  red_tareas:
+    driver: bridge
+
+volumes:
+  datos_db:

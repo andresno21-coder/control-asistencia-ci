@@ -1,0 +1,9 @@
+$ docker exec tareas_db psql -U tareas_user -d tareas -c SELECT id, titulo, completada FROM tareas ORDER BY id;
+ id |                  titulo                   | completada 
+----+-------------------------------------------+------------
+  1 | Crear el repositorio en GitHub            | t
+  2 | Construir los dos contenedores con Docker | f
+  3 | Configurar Jenkins (Entrega 2)            | f
+  4 | Probar la comunicacion entre contenedores | f
+(4 rows)
+

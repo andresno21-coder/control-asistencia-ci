@@ -1,0 +1,4 @@
+$ docker network inspect gestor-tareas-ci_red_tareas --format {{.Name}} ({{.Driver}}){{range .Containers}}{{println}}  {{.Name}} -> {{.IPv4Address}}{{end}}
+gestor-tareas-ci_red_tareas (bridge)
+  tareas_db -> 172.19.0.2/16
+  tareas_web -> 172.19.0.3/16

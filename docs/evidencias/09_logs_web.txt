@@ -1,0 +1,5 @@
+$ docker logs --tail 6 tareas_web
+[2026-11-10 21:24:03 +0000] [1] [INFO] Starting gunicorn 22.0.0
+[2026-11-10 21:24:03 +0000] [1] [INFO] Listening at: http://0.0.0.0:5000 (1)
+[2026-11-10 21:24:03 +0000] [1] [INFO] Using worker: sync
+[2026-11-10 21:24:03 +0000] [8] [INFO] Booting worker with pid: 8

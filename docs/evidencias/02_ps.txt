@@ -1,0 +1,4 @@
+$ docker ps --filter name=tareas_ --format table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}
+NAMES        IMAGE                  STATUS                    PORTS
+tareas_web   gestor-tareas-ci-web   Up 8 seconds              0.0.0.0:8085->5000/tcp, [::]:8085->5000/tcp
+tareas_db    gestor-tareas-ci-db    Up 14 seconds (healthy)   5432/tcp
