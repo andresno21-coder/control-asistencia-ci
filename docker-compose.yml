@@ -3,40 +3,41 @@
 services:
   db:
     build: ./db
-    container_name: tareas_db
+    container_name: asistencia_db
     environment:
-      POSTGRES_DB: ${DB_NAME:-tareas}
-      POSTGRES_USER: ${DB_USER:-tareas_user}
+      POSTGRES_DB: ${DB_NAME:-asistencia}
+      POSTGRES_USER: ${DB_USER:-asistencia_user}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-cambiar_esta_clave}
     volumes:
       - datos_db:/var/lib/postgresql/data
     networks:
-      - red_tareas
+      - red_asistencia
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-tareas_user} -d ${DB_NAME:-tareas}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-asistencia_user} -d ${DB_NAME:-asistencia}"]
       interval: 5s
       timeout: 3s
       retries: 10
 
   web:
     build: ./web
-    container_name: tareas_web
+    container_name: asistencia_web
     environment:
       DB_HOST: db
       DB_PORT: 5432
-      DB_NAME: ${DB_NAME:-tareas}
-      DB_USER: ${DB_USER:-tareas_user}
+      DB_NAME: ${DB_NAME:-asistencia}
+      DB_USER: ${DB_USER:-asistencia_user}
       DB_PASSWORD: ${DB_PASSWORD:-cambiar_esta_clave}
+      ZONA_HORARIA: ${ZONA_HORARIA:-America/Bogota}
     ports:
       - "${WEB_PORT:-8085}:5000"
     depends_on:
       db:
         condition: service_healthy
     networks:
-      - red_tareas
+      - red_asistencia
 
 networks:
-  red_tareas:
+  red_asistencia:
     driver: bridge
 
 volumes:

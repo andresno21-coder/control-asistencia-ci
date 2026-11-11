@@ -1,2 +1,0 @@
-$ curl -s -X POST http://localhost:8085/api/tareas -H Content-Type: application/json -d {"titulo":"Probar la comunicacion entre contenedores"}
-{"id":4,"titulo":"Probar la comunicacion entre contenedores"}

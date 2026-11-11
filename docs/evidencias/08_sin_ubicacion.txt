@@ -1,0 +1,3 @@
+$ curl -s -w " (HTTP %{http_code})" -X POST http://localhost:8085/api/salida -H "Content-Type: application/json" -d '{"documento":"1020304050","nombre":"Ana Rojas"}'
+{"error":"La ubicacion es obligatoria (latitud y longitud validas)"}
+ (HTTP 400)

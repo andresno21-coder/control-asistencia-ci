@@ -1,15 +1,31 @@
-# Gestor de tareas – Proyecto de Integración Continua
+# Control de asistencia – Proyecto de Integración Continua
 
 Proyecto grupal del módulo **Énfasis Profesional I (Integración Continua)** – Politécnico Grancolombiano.
+
+Aplicación web que registra la **hora de entrada** y la **hora de salida** de una persona junto con la **ubicación** (latitud y longitud) desde la que marcó.
 
 **Entrega 1 (semana 3):** proyecto en GitHub y dos contenedores Docker comunicados entre sí.
 
 | Contenedor | Imagen base | Función | Puerto |
 |---|---|---|---|
-| `tareas_web` | `python:3.12-slim` | Aplicación web Flask (página y API REST) | 5000 (publicado en el 8085 del equipo) |
-| `tareas_db` | `postgres:16-alpine` | Base de datos PostgreSQL | 5432 (solo dentro de la red Docker) |
+| `asistencia_web` | `python:3.12-slim` | Aplicación web Flask (página y API REST) | 5000 (publicado en el 8085 del equipo) |
+| `asistencia_db` | `postgres:16-alpine` | Base de datos PostgreSQL | 5432 (solo dentro de la red Docker) |
 
-Los dos contenedores comparten la red `red_tareas`. La aplicación se conecta a la base usando el nombre del servicio (`db`), que Docker resuelve a la IP interna del contenedor.
+Los dos contenedores comparten la red `red_asistencia`. La aplicación se conecta a la base usando el nombre del servicio (`db`), que Docker resuelve a la IP interna del contenedor.
+
+## Cómo funciona
+
+1. La persona escribe su documento y su nombre y pulsa **Marcar entrada**. El navegador pide permiso para leer la ubicación y la envía a la aplicación.
+2. Al terminar pulsa **Marcar salida**; se guarda la hora y la ubicación de salida en la misma jornada.
+3. La página lista las jornadas con hora de entrada, hora de salida, tiempo transcurrido y un enlace al mapa de cada ubicación.
+
+Reglas:
+
+- La hora la pone el servidor (reloj de la base de datos), no el navegador. Se muestra en la zona horaria `America/Bogota` (variable `ZONA_HORARIA`).
+- La ubicación es obligatoria en la entrada y en la salida.
+- Una persona solo puede tener una jornada abierta: no hay segunda entrada sin salida, ni salida sin entrada.
+
+> Los navegadores solo entregan la ubicación en `localhost` o en sitios con HTTPS. Para usar la aplicación desde un celular hay que publicarla con HTTPS.
 
 ## Requisitos
 
@@ -19,22 +35,38 @@ Los dos contenedores comparten la red `red_tareas`. La aplicación se conecta a 
 ## Cómo ejecutarlo
 
 ```bash
-git clone <URL-del-repositorio>
-cd gestor-tareas-ci
+git clone https://github.com/andresno21-coder/control-asistencia-ci.git
+cd control-asistencia-ci
 cp .env.example .env        # opcional: cambie la clave
 docker compose up -d --build
 ```
 
 Abra <http://localhost:8085>.
 
+## API
+
+| Ruta | Método | Cuerpo (JSON) | Respuesta |
+|---|---|---|---|
+| `/api/entrada` | POST | `documento`, `nombre`, `latitud`, `longitud` | 201 con la hora de entrada; 409 si ya hay una entrada sin salida |
+| `/api/salida` | POST | `documento`, `latitud`, `longitud` | 200 con hora de salida y tiempo; 409 si no hay entrada pendiente |
+| `/api/registros` | GET | – | Lista de jornadas |
+| `/health` | GET | – | Estado de la comunicación con la base de datos |
+
+Ejemplo:
+
+```bash
+curl -X POST http://localhost:8085/api/entrada -H "Content-Type: application/json" \
+  -d '{"documento":"1020304050","nombre":"Ana Rojas","latitud":4.637012,"longitud":-74.055318}'
+```
+
 ## Cómo comprobar la comunicación entre contenedores
 
 ```bash
-docker ps                                            # los dos contenedores arriba
-docker network inspect gestor-tareas-ci_red_tareas   # ambos en la misma red
-curl http://localhost:8085/health                    # la web consulta a la base
-docker exec tareas_db psql -U tareas_user -d tareas -c "SELECT * FROM tareas;"
-docker exec tareas_web python -m pytest -q           # pruebas unitarias
+docker ps                                                     # los dos contenedores arriba
+docker network inspect control-asistencia-ci_red_asistencia   # ambos en la misma red
+curl http://localhost:8085/health                             # la web consulta a la base
+docker exec asistencia_db psql -U asistencia_user -d asistencia -c "SELECT * FROM registros;"
+docker exec asistencia_web python -m pytest -q                # pruebas unitarias
 ```
 
 `/health` responde `"estado": "ok"` solo si el contenedor web logró consultar al contenedor de base de datos.
@@ -42,7 +74,7 @@ docker exec tareas_web python -m pytest -q           # pruebas unitarias
 ## Estructura
 
 ```
-gestor-tareas-ci/
+control-asistencia-ci/
 ├── docker-compose.yml     # orquesta los dos contenedores y la red
 ├── .env.example           # variables de entorno de ejemplo
 ├── web/                   # contenedor 1: aplicación
@@ -62,6 +94,10 @@ gestor-tareas-ci/
 docker compose down        # detiene y elimina los contenedores (conserva los datos)
 docker compose down -v     # además borra el volumen con los datos
 ```
+
+## Datos personales
+
+La ubicación de una persona es un dato personal. Antes de usar la aplicación con datos reales hay que informar para qué se recoge y obtener la autorización del titular (Ley 1581 de 2012, Colombia). El repositorio solo contiene datos ficticios.
 
 ## Problemas conocidos
 

@@ -1,0 +1,9 @@
+$ docker exec asistencia_db psql -U asistencia_user -d asistencia -c "SELECT id, to_char(hora_entrada AT TIME ZONE 'America/Bogota','MM-DD HH24:MI:SS') AS entrada, lat_entrada||', '||lon_entrada AS ubic_entrada, to_char(hora_salida AT TIME ZONE 'America/Bogota','MM-DD HH24:MI:SS') AS salida, lat_salida||', '||lon_salida AS ubic_salida FROM registros ORDER BY id;"
+ id |    entrada     |     ubic_entrada     |     salida     |     ubic_salida
+----+----------------+----------------------+----------------+----------------------
+  1 | 11-09 08:02:00 | 4.637000, -74.055300 | 11-09 17:10:00 | 4.637100, -74.055200
+  2 | 11-10 18:59:35 | 4.637012, -74.055318 | 11-10 19:00:41 | 4.637140, -74.055201
+  4 | 11-10 19:00:41 | 4.710989, -74.072092 |                |
+  5 | 11-10 19:00:55 | 4.609710, -74.081750 | 11-10 19:00:58 | 4.609850, -74.081600
+(4 rows)
+

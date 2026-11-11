@@ -1,0 +1,3 @@
+$ curl -s -w " (HTTP %{http_code})" -X POST http://localhost:8085/api/salida -H "Content-Type: application/json" -d '{"documento":"99999999","latitud":4.6,"longitud":-74.0}'
+{"error":"Esta persona no tiene una entrada pendiente de salida"}
+ (HTTP 409)

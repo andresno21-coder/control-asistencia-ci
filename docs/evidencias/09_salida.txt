@@ -1,0 +1,2 @@
+$ curl -s -X POST http://localhost:8085/api/salida -H "Content-Type: application/json" -d '{"documento":"1020304050","latitud":4.637140,"longitud":-74.055201}'
+{"documento":"1020304050","duracion":"0 h 01 min","hora_entrada":"2026-11-10 18:59:35","hora_salida":"2026-11-10 19:00:41","id":2,"latitud":4.63714,"longitud":-74.055201,"nombre":"Ana Rojas"}

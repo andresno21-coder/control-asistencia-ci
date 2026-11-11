@@ -1,2 +1,2 @@
 $ curl -s http://localhost:8085/health
-{"contenedor_bd":"db","contenedor_web":"93e966689263","estado":"ok","ip_bd":"172.19.0.2","motor":"PostgreSQL 16.15 on x86_64-pc-linux-musl"}
+{"contenedor_bd":"db","contenedor_web":"8a9d1ac60d8c","estado":"ok","ip_bd":"172.19.0.2","motor":"PostgreSQL 16.15 on x86_64-pc-linux-musl"}
